@@ -1,26 +1,41 @@
+import Notiflix from 'notiflix';
+
 const submitButton = document.querySelector('button');
 const delayField = document.querySelector('input[name="delay"]');
 const stepField = document.querySelector('input[name="step"]');
 const amountField = document.querySelector('input[name="amount"]');
 
+// function createPromise(position, delay) {
+//   const shouldResolve = Math.random() > 0.3;
+
+//   if (shouldResolve) {
+//     return new Promise(resolve => {
+//       setTimeout(() => {
+//         resolve(`Fulfilled promise ${position} in ${delay}ms`);
+//       }, delay);
+//     });
+//   } else {
+//     return new Promise(reject => {
+//       setTimeout(() => {
+//         reject(`Rejected promise ${position} in ${delay}ms`);
+//       }, delay);
+//     });
+//   }
+// }
+
 function createPromise(position, delay) {
   const shouldResolve = Math.random() > 0.3;
-
-  if (shouldResolve) {
-    return new Promise(resolve => {
-      setTimeout(() => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (shouldResolve) {
         resolve(`Fulfilled promise ${position} in ${delay}ms`);
-      }, delay);
-    });
-  } else {
-    return new Promise(reject => {
-      setTimeout(() => {
+      }
+      else {
         reject(`Rejected promise ${position} in ${delay}ms`);
-      }, delay);
-    });
-  }
+      }
+    }, delay);
+  })
 }
-
 
 const generatePromises = event => {
   event.preventDefault();
@@ -29,8 +44,8 @@ const generatePromises = event => {
 
   for (let i = 1; i <= amountField.value; i++) {
     createPromise(i, (acc += Number(stepField.value)))
-      .then(message => console.log(message))
-      .catch(error => console.log(error));
+      .then(message => Notiflix.Notify.success(message))
+      .catch(error => Notiflix.Notify.failure(error));
   }
 };
 
