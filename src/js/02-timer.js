@@ -1,6 +1,8 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+import Notiflix from 'notiflix';
+
 const startButton = document.querySelector('button[data-start]');
 const timer = document.querySelector('div.timer');
 const field = document.querySelectorAll('div.field');
@@ -32,7 +34,6 @@ label.forEach(el => {
   el.style.textTransform = 'uppercase';
 });
 
-
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -40,10 +41,9 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     choosenDate = selectedDates[0];
-    //console.log(selectedDates[0]);
     if (selectedDates[0] <= new Date()) {
       startButton.disabled = true;
-      alert('Please choose a date in the future');
+      Notiflix.Notify.failure('Please choose a date in the future');
     } else {
       startButton.disabled = false;
     }
@@ -67,16 +67,21 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
+const addLeadingZero = fieldValue => {
+  if (fieldValue.length === 1) { return fieldValue.padStart(2, '0'); }
+  else {return fieldValue}
+};
+
 const startCountdown = () => {
-     let timerId = setInterval(() => {
-         const timeArray = convertMs(choosenDate - new Date());
-         const timeArray2 = [...timeArray]
-         console.log(timeArray2);
-         secondsField.textContent = 77;
-         //console.log(this.minutes)
-     }, 1000);
-    
+  let timerId = setInterval(() => {
+    const timeArray = convertMs(choosenDate - new Date());
+    secondsField.textContent = addLeadingZero(String(timeArray.seconds));
+    minutesField.textContent = addLeadingZero(String(timeArray.minutes));
+    hoursField.textContent = addLeadingZero(String(timeArray.hours));
+    daysField.textContent = addLeadingZero(String(timeArray.days));
+  }, 1000);
 };
 
 startButton.addEventListener('click', startCountdown);
+
 
