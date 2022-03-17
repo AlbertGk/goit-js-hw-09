@@ -32,5 +32,6 @@ const stopBackgroundChange = () => {
 
 
 
+
 startButton.addEventListener('click', startBackgroundChange);
 stopButton.addEventListener('click', stopBackgroundChange);
